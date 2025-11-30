@@ -1,0 +1,35 @@
+sequenceDiagram
+    actor A as Aluno
+    participant V as :TreinoView
+    participant C as :TreinoControl
+    participant D as :TreinoDAO
+    participant T as :Treino
+    
+    A->>V: acessarFichaDeTreino(idAluno)
+    activate V
+    
+    V->>C: consultaTreino(aluno)
+    activate C
+    
+    C->>D: listarTodosTreinos()
+    activate D
+    
+    D-->>C: List<Treino>
+    deactivate D
+    
+    loop
+        C->>T: getAluno()
+        activate T
+        T-->>C: Aluno Associado
+        deactivate T
+        
+        alt Aluno corresponde ao Aluno Logado
+            break Treino Encontrado
+                C-->>V: Treino (Objeto)
+                deactivate C
+            end
+        end
+    end
+    
+    V-->>A: Exibe as informacoes do treino
+    deactivate V
