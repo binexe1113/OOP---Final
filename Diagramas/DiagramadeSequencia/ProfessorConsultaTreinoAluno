@@ -1,0 +1,42 @@
+sequenceDiagram
+    actor P as Professor
+    participant TV as :TreinoView
+    participant TC as :TreinoControl
+    participant AD as :AlunoDAO
+    participant T as :Treino
+    participant A as :Aluno
+
+    P->>TV: consultarAluno()
+    activate TV
+
+    TV->>TC: listarAlunos(professor)
+    activate TC
+
+    TC->>AD: <<create>>
+    activate AD
+    TC->>AD: listarAlunos(professor)
+
+    loop
+        AD->>T: <<create>>
+        activate T
+        deactivate T
+        AD->>A: <<create>>
+        activate A
+        deactivate A
+    end
+
+    AD-->>TC: listaResult
+    deactivate AD
+
+    TC-->>TV: List <<Aluno>>
+    deactivate TC
+
+    P->>TV: seleciona Aluno
+    
+    TV->>TC: consultaTreino(Aluno)
+    activate TC
+    TC-->>TV: Treino
+    deactivate TC
+
+    TV-->>P: Exibe as informações do treino
+    deactivate TV
