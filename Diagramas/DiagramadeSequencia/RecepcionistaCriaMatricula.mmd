@@ -1,0 +1,40 @@
+sequenceDiagram
+    actor R as Recepcionista
+    participant MV as :MatriculaView
+    participant MC as :MatriculaControl
+    participant AD as :AlunoDAO
+    participant PD as :PlanoDAO
+    participant M as :Matricula
+    participant MD as :MatriculaDAO
+
+    R->>MV: adicionarMatricula(cpfAluno, idPlano, dataInicio)
+    activate MV
+
+    MV->>MC: adicionarMatricula(cpfAluno, idPlano, dataInicio)
+    activate MC
+
+    MC->>AD: buscarPorId(cpfAluno)
+    activate AD
+    AD-->>MC: objAluno
+    deactivate AD
+
+    MC->>PD: buscarPorId(idPlano)
+    activate PD
+    PD-->>MC: objPlano
+    deactivate PD
+
+    MC->>M: <<create>> (objAluno, objPlano, dataInicio)
+    activate M
+    M-->>MC: novaMatricula
+    deactivate M
+
+    MC->>MD: salvar(novaMatricula)
+    activate MD
+    MD-->>MC: true (sucesso)
+    deactivate MD
+
+    MC-->>MV: sucesso
+    deactivate MC
+
+    MV-->>R: Exibe "Matrícula realizada com sucesso!"
+    deactivate MV
