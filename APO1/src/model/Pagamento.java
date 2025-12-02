@@ -20,7 +20,7 @@ public class Pagamento {
 
 
 
-    // (Gere automaticamente no Eclipse: Source > Generate Getters and Setters)
+    // Source > Generate Getters and Setters)
     
     public int getIdPagamento() { return idPagamento; }
     public void setIdPagamento(int idPagamento) { this.idPagamento = idPagamento; }

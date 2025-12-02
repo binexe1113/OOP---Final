@@ -10,7 +10,7 @@ public class Matricula {
     private Plano plano;
     private LocalDate dataInicio;
     private LocalDate dataFim;
-    private Boolean status; // Sugestão: true = Ativa, false = Inativa/Cancelada
+    private Boolean status; // true = Ativa, false = Inativa/Cancelada
     
     private List<Pagamento> pagamentos;
 
@@ -22,7 +22,7 @@ public class Matricula {
         this.dataFim = dataInicio.plusYears(1);
     
         
-        // Inicializa a lista vazia para evitar erro ao adicionar pagamentos depois
+        // Inicializa a lista vazia para evitar erro 
         this.pagamentos = new ArrayList<>();
     }
 

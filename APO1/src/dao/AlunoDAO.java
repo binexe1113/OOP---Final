@@ -21,27 +21,30 @@ public class AlunoDAO {
  // Dentro do AlunoDAO.java
 
     public List<Aluno> listarAlunosComTreino(int idProfessor) {
+        // Lista auxiliar para guardar os alunos encontrados
         List<Aluno> lista = new ArrayList<>();
+        // Define a chamada da Stored Procedure
         String sql = "{call sp_ListarAlunosETreinosPorProfessor(?)}";
 
         try {
             CallableStatement stmt = this.conexao.prepareCall(sql);
-            stmt.setInt(1, idProfessor);
+            stmt.setInt(1, idProfessor); // Passa o ID do professor como parâmetro
             ResultSet rs = stmt.executeQuery();
 
+            // LOOP COMEÇA AQUI - Percorre cada linha retornada pelo banco de dados
             while (rs.next()) {
-                // 1. Cria o Aluno
+                // 1. Instancia o objeto Aluno com os dados básicos da linha
                 Aluno a = new Aluno(
                     rs.getInt("idAluno"),
                     rs.getString("nome"),
                     rs.getString("cpf")
                 );
 
-                // 2. Cria o Treino (usando os dados da mesma linha do SQL)
-                // Lembre de tratar datas nulas se necessário
+                // 2. Captura as datas separadamente para tratar possíveis valores nulos
                 java.sql.Date dbInicio = rs.getDate("dataInicio");
                 java.sql.Date dbFim = rs.getDate("dataFim");
 
+                // 3. Instancia o objeto Treino (convertendo SQL Date para LocalDate se necessário)
                 Treino t = new Treino(
                     rs.getInt("idTreino"),
                     rs.getString("descricao"),
@@ -49,19 +52,20 @@ public class AlunoDAO {
                     dbFim != null ? dbFim.toLocalDate() : null
                 );
 
-                // 3. ASSOCIAÇÃO: Coloca o treino dentro do aluno
+                // 4. Associação: Vincula o objeto Treino dentro do objeto Aluno
                 a.setTreino(t);
 
-                // 4. Adiciona na lista
+                // Adiciona o aluno completo na lista de retorno
                 lista.add(a);
             }
-            stmt.close(); rs.close();
+            stmt.close();
+            rs.close();
         } catch (SQLException e) {
+            System.err.println("Erro ao listar alunos: " + e.getMessage());
             e.printStackTrace();
         }
         return lista;
     }
-
     public List<Aluno> listarAlunosPorProfessor(int idProfessor) {
         List<Aluno> listaAlunos = new ArrayList<>();
         

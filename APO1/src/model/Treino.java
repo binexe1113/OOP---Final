@@ -16,7 +16,7 @@ public class Treino {
     // Construtor Vazio
     public Treino() {}
 
-    // Construtor Cheio (Para facilitar a criação rápida)
+    // Construtor Cheio ()
     public Treino(int idTreino, Aluno aluno, String descricao, LocalDate dataInicio, LocalDate dataFim) {
         this.idTreino = idTreino;
         this.aluno = aluno;
@@ -91,6 +91,5 @@ public class Treino {
         this.aluno = aluno;
     }
     
-    // --- Helper / Utilitários ---
     
 }

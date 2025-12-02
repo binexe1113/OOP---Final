@@ -8,9 +8,9 @@ public class TreinoView extends JFrame {
     
     // Variáveis globais da classe
     private JTextField txtTreinos;
-    private JTextField txtInputId; // Renomeei o 'textField' para ficar mais claro
-    private JTextField txtLabelId; // Renomeei o 'txtId' para ficar mais claro
-    private JComboBox<String> comboBox; // Agora é acessível em toda a classe
+    private JTextField txtInputId; 
+    private JTextField txtLabelId; 
+    private JComboBox<String> comboBox; 
 
     public TreinoView() {
         // Configurações da Janela
@@ -71,7 +71,7 @@ public class TreinoView extends JFrame {
                     String tipoUsuario = comboBox.getSelectedItem().toString();
 
                     // 3. Decide qual tela abrir
-                    if (tipoUsuario.equals("Aluno")) {
+                    if (tipoUsuario.equals("Aluno")) { 
                         // Abre a tela do ALUNO passando o ID
                         AlunoTreinoView telaAluno = new AlunoTreinoView(id);
                         telaAluno.setVisible(true);

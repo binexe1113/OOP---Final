@@ -19,12 +19,14 @@ public class Plano {
         this.status = status;
     }
     
+    //Construtor usado para montar o objeto plano que sera inerido dentro da matricula, as outras informações seriam irrelevantes
     public Plano(int id, String nome, double preco) {
         this.idPlano = id;
         this.nome = nome;
         this.preco = preco;
     }
 
+    //=======GETTERS E SETTERS=========
 
 
 	public int getIdPlano() {

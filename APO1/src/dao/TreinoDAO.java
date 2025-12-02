@@ -20,7 +20,6 @@ public class TreinoDAO {
         this.conexao = DBConnection.getConnection();
     }
 
-    // --- MÉTODOS QUE FALTAVAM ---
 
     // 1. Método chamado pelo TreinoControl para buscar o treino específico
     public Treino buscarTreinoAtual(int idAluno) {
@@ -58,7 +57,7 @@ public class TreinoDAO {
     
  // Método listarTodos() dentro do TreinoDAO
 
-    public List<Treino> listarTodos() {
+    public List<Treino> listarTodosTreinos() {
         List<Treino> lista = new ArrayList<>();
         String sql = "{call sp_ListarTodosOsTreinos()}"; 
 

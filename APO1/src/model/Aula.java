@@ -21,7 +21,7 @@ public class Aula {
         this.alunos = new ArrayList<>();
     }
 
-    // Construtor Cheio (Opcional, para facilitar testes)
+    // Construtor Cheio ( para facilitar testes)
     public Aula(int idAula, String nome, LocalDateTime horario, int capacidadeMaxima, Professor professor) {
         this.idAula = idAula;
         this.nome = nome;
@@ -31,16 +31,7 @@ public class Aula {
         this.alunos = new ArrayList<>();
     }
 
-    // --- MÉTODOS ÚTEIS ---
     
-    // Método auxiliar para adicionar um aluno (evita ter que pegar a lista inteira)
-    public boolean adicionarAluno(Aluno aluno) {
-        if (this.alunos.size() < capacidadeMaxima) {
-            this.alunos.add(aluno);
-            return true; // Adicionado com sucesso
-        }
-        return false; // Aula cheia
-    }
 
     // --- GETTERS E SETTERS ---
 

@@ -12,9 +12,6 @@ public class Professor {
     private Aula aula;
     private AvaliacaoFisica avaliacaoFisica;
 
-    // Construtor Vazio
-    public Professor() {
-    }
 
     // --- GETTERS E SETTERS ---
 

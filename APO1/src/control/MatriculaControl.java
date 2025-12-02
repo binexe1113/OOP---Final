@@ -13,13 +13,22 @@ public class MatriculaControl {
     // Método principal chamado pela View
     public Boolean adicionarMatricula(String cpfAluno, int idPlano, LocalDate dataInicio) {
         
-        // 1. MC->>AD: buscarPorId(cpfAluno)
-        // No diagrama está "buscarPorId", mas como passamos CPF, buscarPorCpf é o correto no código.
+        // 1. MC->>AD: buscarPorCpf(cpfAluno)
         AlunoDAO alunoDAO = new AlunoDAO();
         Aluno objAluno = alunoDAO.buscarPorCpf(cpfAluno);
         
         if (objAluno == null) {
             return false;
+        }
+        
+        //Checagem para ver se já existe matricula associada a esse aluno
+        MatriculaDAO matriculaDAO = new MatriculaDAO();
+        
+        //Verifica se o aluno já tem matrícula aqui
+        
+        if (matriculaDAO.verificaMatriculaAtiva(objAluno.getId())) {
+        	System.out.println("ERRO: Este aluno já possui matrícula ativa");
+        	return false;
         }
 
         // 2. MC->>PD: buscarPorId(idPlano)
@@ -34,8 +43,8 @@ public class MatriculaControl {
         Matricula novaMatricula = new Matricula(objAluno, objPlano, dataInicio);
 
         // 4. MC->>MD: salvar(novaMatricula)
-        MatriculaDAO matriculaDAO = new MatriculaDAO();
-        boolean sucesso = matriculaDAO.salvar(novaMatricula);
+        MatriculaDAO matriculaDAO1 = new MatriculaDAO();
+        boolean sucesso = matriculaDAO1.salvar(novaMatricula);
 
         // Feedback final para a View exibir
         if (sucesso) {

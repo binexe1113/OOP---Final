@@ -93,7 +93,7 @@ public class MatriculaView extends JFrame {
                 JOptionPane.showMessageDialog(this, "Matrícula realizada com sucesso!");
                 limparCampos();
             } else {
-                JOptionPane.showMessageDialog(this, "Erro: Aluno não encontrado ou erro ao salvar.", "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Erro: Aluno não encontrado, erro ao salvar ou Aluno já possui matricula ativa", "Erro", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (NumberFormatException ex) {

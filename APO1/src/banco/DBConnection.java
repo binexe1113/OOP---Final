@@ -104,7 +104,6 @@ package banco;
 		
 		public static Connection getConnection() {
 		    try {
-		        // CORREÇÃO: Verifica se é nula OU se está fechada
 		        if (connection == null || connection.isClosed()) {
 		            new DBConnection();
 		        }

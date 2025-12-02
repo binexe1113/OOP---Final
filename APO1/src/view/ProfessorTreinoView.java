@@ -28,7 +28,7 @@ public class ProfessorTreinoView extends JFrame {
     private JTextArea textAreaDetalhe;
     
     private TreinoControl control;
-    private int idProfessorLogado; // <--- MUDANÇA 1: Variável para guardar quem está logado
+    private int idProfessorLogado; // Variável para guardar quem está logado
 
     /**
      * Launch the application.
@@ -51,7 +51,7 @@ public class ProfessorTreinoView extends JFrame {
      * Create the frame.
      */
     public ProfessorTreinoView(int idProfessor) {
-        // MUDANÇA 2: Guardamos o ID recebido na variável da classe
+        //Guardamos o ID recebido na variável da classe
         this.idProfessorLogado = idProfessor;
         
         control = new TreinoControl();
@@ -109,12 +109,10 @@ public class ProfessorTreinoView extends JFrame {
         contentPane.add(scrollDetalhe);
     }
     
-    // --- MÉTODOS AUXILIARES PARA LIMPAR O CÓDIGO ---
 
     private void listarAlunos() {
-        // MUDANÇA 3: Passamos o this.idProfessorLogado para o controller
     	// Agora chama o método que popula o cache
-    	List<Aluno> lista = control.carregarListaDoBanco(this.idProfessorLogado);
+    	List<Aluno> lista = control.listarAlunosComTreino(this.idProfessorLogado);
     	// ... código de preencher o JTextArea igual antes ...        
         textAreaLista.setText(""); 
         textAreaLista.append("--- ALUNOS VINCULADOS A MIM ---\n");
