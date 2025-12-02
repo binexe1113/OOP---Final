@@ -13,7 +13,7 @@ sequenceDiagram
     MV->>MC: adicionarMatricula(cpfAluno, idPlano, dataInicio)
     activate MC
 
-    MC->>AD: buscarPorId(cpfAluno)
+    MC->>AD: buscarPorCpf(cpfAluno)
     activate AD
     AD-->>MC: objAluno
     deactivate AD
