@@ -9,12 +9,12 @@ sequenceDiagram
     P->>TV: consultarAluno()
     activate TV
 
-    TV->>TC: listarAlunos(professor)
+    TV->>TC: listarAlunosComTreino(professor)
     activate TC
 
     TC->>AD: <<create>>
     activate AD
-    TC->>AD: listarAlunos(professor)
+    TC->>AD: listarAlunosComTreino(professor)
 
     loop
         AD->>T: <<create>>
@@ -33,7 +33,7 @@ sequenceDiagram
 
     P->>TV: seleciona Aluno
     
-    TV->>TC: consultaTreino(Aluno)
+    TV->>TC: consultaTreino(idAlunoAlvo)
     activate TC
     TC-->>TV: Treino
     deactivate TC
