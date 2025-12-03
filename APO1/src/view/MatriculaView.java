@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class MatriculaView extends JFrame {
 
     // Componentes da tela
-    private JTextField txtCpfAluno; // Mudei o nome da variável para ficar claro
+    private JTextField txtCpfAluno; 
     private JTextField txtIdPlano;
     private JButton btnAdicionar;
     private JTextField txtIdPagamento;
@@ -45,9 +45,6 @@ public class MatriculaView extends JFrame {
         
         
 
-        // --- CAMPO DO PLANO (CONTINUA ID POR ENQUANTO) ---
-        // Notei que seu label dizia "nome", mas a lógica usava ID. 
-        // Mantive ID para não quebrar a lógica do plano agora.
         JLabel lblPlano = new JLabel("Insira o ID do Plano:"); 
         lblPlano.setBounds(30, 68, 140, 25);
         getContentPane().add(lblPlano);
@@ -81,7 +78,6 @@ public class MatriculaView extends JFrame {
         try {
             // 1. Captura os dados da tela
             
-            // MUDANÇA PRINCIPAL AQUI:
             // Pegamos o texto direto (String), sem converter para Integer
             String cpfAluno = txtCpfAluno.getText(); 
             

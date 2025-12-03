@@ -225,7 +225,7 @@ DROP PROCEDURE IF EXISTS sp_BuscarPagamentoPorID $$
 
 CREATE PROCEDURE sp_BuscarPagamentoPorID(IN p_idPagamento INT)
 BEGIN
-    SELECT * FROM Pagamento  -- Verifique se sua tabela se chama 'Pagamento' ou 'Pagamentos'
+    SELECT * FROM Pagamento  
     WHERE idPagamento = p_idPagamento;
 END $$
 

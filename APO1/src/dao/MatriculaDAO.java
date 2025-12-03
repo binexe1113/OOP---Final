@@ -25,8 +25,10 @@ public class MatriculaDAO {
             CallableStatement stmt = this.conexao.prepareCall(sql);
             
             // Mapeamento dos atributos do objeto Matricula para os parâmetros da Stored Procedure.
+            
             // Parâmetro 1: ID do Aluno (obtido do objeto aninhado)
             stmt.setInt(1, matricula.getAluno().getId());
+            
             // Parâmetro 2: ID do Plano (obtido do objeto aninhado)
             stmt.setInt(2, matricula.getPlano().getIdPlano());
             // Parâmetro 3: Data de Início (conversão de LocalDate para java.sql.Date)

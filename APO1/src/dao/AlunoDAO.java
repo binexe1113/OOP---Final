@@ -44,7 +44,7 @@ public class AlunoDAO {
                 java.sql.Date dbInicio = rs.getDate("dataInicio");
                 java.sql.Date dbFim = rs.getDate("dataFim");
 
-                // 3. Instancia o objeto Treino (convertendo SQL Date para LocalDate se necessário)
+                // 3. Instancia o objeto Treino (convertendo SQL Date para LocalDate)
                 Treino t = new Treino(
                     rs.getInt("idTreino"),
                     rs.getString("descricao"),
@@ -66,6 +66,7 @@ public class AlunoDAO {
         }
         return lista;
     }
+    
     public List<Aluno> listarAlunosPorProfessor(int idProfessor) {
         List<Aluno> listaAlunos = new ArrayList<>();
         
