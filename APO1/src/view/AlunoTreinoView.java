@@ -87,23 +87,15 @@ public class AlunoTreinoView extends JFrame {
         
         textArea = new JTextArea();
         
-        // Quem define o tamanho na tela agora é o painel de rolagem (JScrollPane).
+        textArea.setEditable(false); 
+        textArea.setLineWrap(true);  
+        textArea.setWrapStyleWord(true); 
         
-        textArea.setEditable(false); // Impede que o usuário digite no campo
-        textArea.setLineWrap(true);  // Quebra a linha automaticamente se o texto for longo
-        textArea.setWrapStyleWord(true); // Garante que a quebra de linha não corte palavras no meio
-        
-        // Cria o JScrollPane e "embala" o textArea dentro dele.
-        // O textArea agora é o conteúdo (viewport) do scrollPane.
         JScrollPane scrollPane = new JScrollPane(textArea);
         
-        // Define a posição (X, Y) e o tamanho (Largura, Altura) do SCROLLPANE
         scrollPane.setBounds(45, 68, 340, 250);
         
-        // Adiciona o scrollPane ao painel principal da janela.
-        // Nota: Não adicionamos o textArea diretamente ao contentPane, apenas o scrollPane.
         contentPane.add(scrollPane);
         
-        // --- FIM DA CORREÇÃO ---
     }
 }
