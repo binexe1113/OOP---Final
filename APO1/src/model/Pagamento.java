@@ -22,7 +22,18 @@ public class Pagamento {
 
     // Source > Generate Getters and Setters)
     
-    public int getIdPagamento() { return idPagamento; }
+ // Construtor Cheio
+    public Pagamento(int idPagamento, LocalDate dataPagamento, LocalDate dataVencimento, double valor, String metodoPagamento, boolean status) {
+        this.idPagamento = idPagamento;
+        this.dataPagamento = dataPagamento;
+        this.dataVencimento = dataVencimento;
+        this.valor = valor;
+        this.metodoPagamento = metodoPagamento;
+        this.status = status;
+    }
+
+
+	public int getIdPagamento() { return idPagamento; }
     public void setIdPagamento(int idPagamento) { this.idPagamento = idPagamento; }
 
     public LocalDate getDataPagamento() { return dataPagamento; }

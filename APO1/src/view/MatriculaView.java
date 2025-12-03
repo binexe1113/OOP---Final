@@ -12,9 +12,12 @@ public class MatriculaView extends JFrame {
     private JTextField txtCpfAluno; // Mudei o nome da variável para ficar claro
     private JTextField txtIdPlano;
     private JButton btnAdicionar;
+    private JTextField txtIdPagamento;
+
     
     // Referência ao Controlador
     private MatriculaControl matriculaControl;
+    private JTextField textField;
 
     public MatriculaView() {
         this.matriculaControl = new MatriculaControl();
@@ -33,28 +36,38 @@ public class MatriculaView extends JFrame {
     private void inicializarComponentes() {
         // --- CAMPO DO ALUNO (AGORA É CPF) ---
         JLabel lblAluno = new JLabel("Insira o CPF do Aluno:");
-        lblAluno.setBounds(30, 60, 140, 25);
+        lblAluno.setBounds(30, 32, 140, 25);
         getContentPane().add(lblAluno);
 
         txtCpfAluno = new JTextField(); // Variável renomeada
-        txtCpfAluno.setBounds(180, 60, 150, 25);
+        txtCpfAluno.setBounds(180, 32, 150, 25);
         getContentPane().add(txtCpfAluno);
+        
+        
 
         // --- CAMPO DO PLANO (CONTINUA ID POR ENQUANTO) ---
         // Notei que seu label dizia "nome", mas a lógica usava ID. 
         // Mantive ID para não quebrar a lógica do plano agora.
         JLabel lblPlano = new JLabel("Insira o ID do Plano:"); 
-        lblPlano.setBounds(30, 100, 140, 25);
+        lblPlano.setBounds(30, 68, 140, 25);
         getContentPane().add(lblPlano);
 
         txtIdPlano = new JTextField();
-        txtIdPlano.setBounds(180, 100, 150, 25);
+        txtIdPlano.setBounds(180, 68, 150, 25);
         getContentPane().add(txtIdPlano);
 
         // --- BOTÃO ---
         btnAdicionar = new JButton("Adicionar");
         btnAdicionar.setBounds(140, 160, 100, 30);
         getContentPane().add(btnAdicionar);
+        
+        JLabel lblInsiraOId = new JLabel("Insira o ID do Pagamento:");
+        lblInsiraOId.setBounds(20, 104, 150, 25);
+        getContentPane().add(lblInsiraOId);
+        
+        txtIdPagamento = new JTextField();
+        txtIdPagamento.setBounds(180, 104, 150, 25);
+        getContentPane().add(txtIdPagamento);
 
         btnAdicionar.addActionListener(new ActionListener() {
             @Override
@@ -74,9 +87,12 @@ public class MatriculaView extends JFrame {
             
             // O Plano continua sendo int (ID)
             int idPlano = Integer.parseInt(txtIdPlano.getText());
+            
+            int idPagamento = Integer.parseInt(txtIdPagamento.getText());
 
             // 2. Data atual
             LocalDate dataInicio = LocalDate.now(); 
+
 
             // 3. Validação simples de campo vazio
             if(cpfAluno.isEmpty()) {
@@ -86,7 +102,7 @@ public class MatriculaView extends JFrame {
 
             // 4. Chama o Controller 
             // O Controller DEVE esperar (String, int, LocalDate) agora
-            boolean sucesso = matriculaControl.adicionarMatricula(cpfAluno, idPlano, dataInicio);
+            boolean sucesso = matriculaControl.adicionarMatricula(cpfAluno, idPlano, dataInicio, idPagamento);
 
             // 5. Feedback
             if (sucesso) {

@@ -3,15 +3,17 @@ package control;
 import java.time.LocalDate;
 import model.Aluno;
 import model.Matricula;
+import model.Pagamento;
 import model.Plano;
 import dao.AlunoDAO;
 import dao.MatriculaDAO;
+import dao.PagamentoDAO;
 import dao.PlanoDAO;
 
 public class MatriculaControl {
 
     // Método principal chamado pela View
-    public Boolean adicionarMatricula(String cpfAluno, int idPlano, LocalDate dataInicio) {
+    public Boolean adicionarMatricula(String cpfAluno, int idPlano, LocalDate dataInicio, int idPagamento) {
         
         // 1. MC->>AD: buscarPorCpf(cpfAluno)
         AlunoDAO alunoDAO = new AlunoDAO();
@@ -41,6 +43,15 @@ public class MatriculaControl {
 
         // 3. MC->>M: <<create>> (objAluno, objPlano, dataInicio)
         Matricula novaMatricula = new Matricula(objAluno, objPlano, dataInicio);
+        
+        // MC->>PgD: buscarPorId(idPagamento)
+        PagamentoDAO pagamentoDAO = new PagamentoDAO();
+		Pagamento objPagamento = pagamentoDAO.buscarPorId(idPagamento);
+
+        if (objPagamento == null) {
+            System.out.println("ERRO: Pagamento não localizado.");
+            return false;
+        }
 
         // 4. MC->>MD: salvar(novaMatricula)
         MatriculaDAO matriculaDAO1 = new MatriculaDAO();
