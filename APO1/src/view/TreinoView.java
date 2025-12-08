@@ -1,6 +1,12 @@
 package view;
 
 import javax.swing.*;
+
+import dao.AlunoDAO;
+import dao.ProfessorDAO;
+import model.Aluno;
+import model.Professor;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -32,20 +38,20 @@ public class TreinoView extends JFrame {
         // --- ComboBox (Escolha de Perfil) ---
         comboBox = new JComboBox<>();
         comboBox.setModel(new DefaultComboBoxModel<>(new String[] {"Aluno", "Professor"}));
-        comboBox.setBounds(174, 72, 120, 22); // Aumentei um pouco a largura
+        comboBox.setBounds(174, 72, 120, 22); // MAIOR?
         getContentPane().add(comboBox);
         
-        // --- Label "ID:" ---
+        // --- Label "CPF:" ---
         txtLabelId = new JTextField();
         txtLabelId.setEditable(false);
-        txtLabelId.setText("ID:");
+        txtLabelId.setText("CPF:");
         txtLabelId.setColumns(10);
         txtLabelId.setBounds(174, 122, 30, 20);
         getContentPane().add(txtLabelId);
 
-        // --- Campo de Texto para digitar o ID ---
+        // --- Campo de Texto para digitar o CPF ---
         txtInputId = new JTextField();
-        txtInputId.setBounds(210, 122, 83, 20);
+        txtInputId.setBounds(210, 122, 120, 20);
         getContentPane().add(txtInputId);
         txtInputId.setColumns(10);
         
@@ -57,38 +63,60 @@ public class TreinoView extends JFrame {
         btnEntrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    // 1. Pega o ID digitado
-                    String idTexto = txtInputId.getText();
+                    // 1. Pega o CPF digitado
+                    String cpf = txtInputId.getText();
                     
-                    if (idTexto.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Por favor, digite o ID.");
+                    if (cpf.isEmpty()) {//DENOVO EVITANDO GRANDE ERROS!
+                        JOptionPane.showMessageDialog(null, "Por favor, digite o CPF.");
                         return;
                     }
                     
-                    int id = Integer.parseInt(idTexto); // Converte para número
                     
-                    // 2. Verifica o que está selecionado no ComboBox
+                    // 2. Verifica o que está selecionado no ComboBox : ALUNO ? PROFESSOR
                     String tipoUsuario = comboBox.getSelectedItem().toString();
+                    
+                    
 
                     // 3. Decide qual tela abrir
                     if (tipoUsuario.equals("Aluno")) { 
-                        // Abre a tela do ALUNO passando o ID
-                        AlunoTreinoView telaAluno = new AlunoTreinoView(id);
+                    	// 1. Chama a classe que controla o banco de dados do Aluno
+                        AlunoDAO dao = new AlunoDAO(); 
+                        
+                        // 2. Recupera o objeto Aluno completo pelo ID digitado
+                        Aluno alunoLogado = dao.buscarPorCpf(cpf); 
+                        
+                        // Validação: verifica se achou Oo Aluno
+                        if (alunoLogado == null) {
+                            JOptionPane.showMessageDialog(null, "Aluno não encontrado!");
+                            return;
+                        }
+
+                        // 3. Abre a tela passando o OBJETO 'alunoLogado' recuperado
+                        AlunoTreinoView telaAluno = new AlunoTreinoView(alunoLogado);
                         telaAluno.setVisible(true);
                         
                     } else {
-                        // Abre a tela do PROFESSOR passando o ID
-                        ProfessorTreinoView telaProf = new ProfessorTreinoView(id);
-                        telaProf.setVisible(true);
-                    }
+                        // --- LÓGICA NOVA PARA PROFESSOR ---
+                        
+                        ProfessorDAO dao = new ProfessorDAO();
+                        Professor professorLogado = dao.buscarPorCpf(cpf);
+                        
+                        if (professorLogado == null) {
+                            JOptionPane.showMessageDialog(null, "Professor não encontrado!");
+                            return;
+                        }
 
-                    // 4. Fecha a tela de login atual
+                        // Abre a tela passando o OBJETO 'professorLogado'
+                        ProfessorTreinoView telaProf = new ProfessorTreinoView(professorLogado);
+                        telaProf.setVisible(true);
+                    }                    // 4. Fecha a tela de login atual
                     dispose();
 
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(null, "O ID deve ser apenas números!");
                 } catch (Exception ex) {
-                    // Caso as outras telas ainda não estejam prontas ou dê erro
+                	
+                	//DEBUG:
                     JOptionPane.showMessageDialog(null, "Erro ao abrir tela: " + ex.getMessage());
                     ex.printStackTrace();
                 }

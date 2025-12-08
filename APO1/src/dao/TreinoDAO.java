@@ -57,38 +57,38 @@ public class TreinoDAO {
     
  // Método listarTodos() dentro do TreinoDAO
 
-    public List<Treino> listarTodosTreinos() {
-        List<Treino> lista = new ArrayList<>();
-        String sql = "{call sp_ListarTodosOsTreinos()}"; 
+    public Treino listarTreino(Aluno aluno) {
+    	int alunoID = aluno.getId();
+        String sql = "{call sp_BuscarProprioTreino(?)}"; 
+        Treino t1 = null;
 
         try {
             CallableStatement stmt = this.conexao.prepareCall(sql);
-            ResultSet rs = stmt.executeQuery();
+            stmt.setInt(1,alunoID);//Troca o ? pela var
+            ResultSet rs = stmt.executeQuery();//Executa a query e armazena o resultado
+            rs.next();//Aqui sem isso o cursosr aponta para o HEADEr
 
-            while (rs.next()) {
+
                 int idTreino = rs.getInt("idTreino");
                 String descricao = rs.getString("descricao");
                 
                 // 1. Pegamos o ID que veio do banco
-                int idAlunoDoBanco = rs.getInt("idAluno");
                 
                 // 2. Criamos um Aluno "Proxy" (Só com ID, o resto null)
-                // Isso serve para vincular o treino a esse ID sem precisar buscar nome/cpf agora
-                Aluno alunoAssociado = new Aluno(idAlunoDoBanco, null, null);
+                // para vincular o treino a esse ID sem precisar buscar nome/cpf 
 
                 LocalDate inicio = rs.getDate("dataInicio") != null ? rs.getDate("dataInicio").toLocalDate() : null;
                 LocalDate fim = rs.getDate("dataFim") != null ? rs.getDate("dataFim").toLocalDate() : null;
 
                 // 3. Passamos o objeto aluno para o treino
-                Treino t = new Treino(idTreino, descricao, inicio, fim, alunoAssociado);
+                t1 = new Treino(idTreino, descricao, inicio, fim, aluno);
                 
-                lista.add(t);
-            }
+            
             stmt.close(); rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return lista;
+		return  t1;
     }
     
 }

@@ -2,12 +2,14 @@ package dao;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import banco.DBConnection;
 import model.Aluno;
+import model.Professor;
 import model.Treino;
 
 public class AlunoDAO {
@@ -18,9 +20,37 @@ public class AlunoDAO {
         this.conexao = DBConnection.getConnection();
     }
     
- // Dentro do AlunoDAO.java
+    
+    //MÉTODO PARA COMBOBOX
+    public List<Aluno> listarTodos() {
+        List<Aluno> listaAlunos = new ArrayList<>();
+        String sql = "SELECT * FROM aluno"; 
 
-    public List<Aluno> listarAlunosComTreino(int idProfessor) {
+        try {
+            PreparedStatement stmt = this.conexao.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Aluno aluno = new Aluno();
+                
+                // Mapeie as colunas do banco para o objeto
+                aluno.setCpf(rs.getString("cpf"));
+                aluno.setNome(rs.getString("nome"));
+                aluno.setId(rs.getInt("idAluno"));
+                listaAlunos.add(aluno);
+            }
+            
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Ou use um Logger
+        }
+
+        return listaAlunos;
+    }
+    
+    public List<Aluno> listarAlunosComTreino(Professor professorLogado) {
         // Lista auxiliar para guardar os alunos encontrados
         List<Aluno> lista = new ArrayList<>();
         // Define a chamada da Stored Procedure
@@ -28,31 +58,32 @@ public class AlunoDAO {
 
         try {
             CallableStatement stmt = this.conexao.prepareCall(sql);
-            stmt.setInt(1, idProfessor); // Passa o ID do professor como parâmetro
+            stmt.setInt(1, professorLogado.getIdProf()); // Passa o ID do professor como parâmetro
             ResultSet rs = stmt.executeQuery();
 
             // LOOP COMEÇA AQUI - Percorre cada linha retornada pelo banco de dados
             while (rs.next()) {
-                // 1. Instancia o objeto Aluno com os dados básicos da linha
+                // 1. Instancia o objeto TREINO PRIMEIRO para tratar depois do aluno
+            	
+            	//Captura as datas primeiro para tratar de valores nulos
+            	java.sql.Date dbInicio = rs.getDate("dataInicio");
+            	java.sql.Date dbFim = rs.getDate("dataInicio");
+            	
+            	//Agora sim instancia o objeto TREINO hehe
+                Treino t = new Treino(
+                        rs.getInt("idTreino"),
+                        rs.getString("descricao"),
+                        dbInicio != null ? dbInicio.toLocalDate() : null,
+                        dbFim != null ? dbFim.toLocalDate() : null
+                    );
+                //2. INSTANCIA OBJETO ALUNO DEPOIS DO TREINO
                 Aluno a = new Aluno(
                     rs.getInt("idAluno"),
                     rs.getString("nome"),
                     rs.getString("cpf")
                 );
-
-                // 2. Captura as datas separadamente para tratar possíveis valores nulos
-                java.sql.Date dbInicio = rs.getDate("dataInicio");
-                java.sql.Date dbFim = rs.getDate("dataFim");
-
-                // 3. Instancia o objeto Treino (convertendo SQL Date para LocalDate)
-                Treino t = new Treino(
-                    rs.getInt("idTreino"),
-                    rs.getString("descricao"),
-                    dbInicio != null ? dbInicio.toLocalDate() : null,
-                    dbFim != null ? dbFim.toLocalDate() : null
-                );
-
-                // 4. Associação: Vincula o objeto Treino dentro do objeto Aluno
+                
+                //3. ASSOCIAMOS AGORA TREINO AO ALUNO CRIADO 
                 a.setTreino(t);
 
                 // Adiciona o aluno completo na lista de retorno

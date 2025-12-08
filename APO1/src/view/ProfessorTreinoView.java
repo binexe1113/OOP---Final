@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 // Importações das classes do projeto (Model e Control)
 import control.TreinoControl;
 import model.Aluno;
+import model.Professor;
 import model.Treino; // <--- IMPORTANTE: Importar o modelo Treino
 
 public class ProfessorTreinoView extends JFrame {
@@ -31,12 +32,13 @@ public class ProfessorTreinoView extends JFrame {
     private JTextField txtIdAluno;
     private JTextArea textAreaLista;
     private JTextArea textAreaDetalhe;
+
     
     // Referência ao controlador para realizar operações lógicas
     private TreinoControl control;
     
-    // Variável para armazenar o ID do professor que fez login nesta sessão
-    private int idProfessorLogado; 
+    private Professor professorLogado;
+    
 
     /**
      * Launch the application.
@@ -46,12 +48,16 @@ public class ProfessorTreinoView extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    // Simulação: Cria a tela passando ID 1 (Ex: Prof. Jiraya) para teste
-                    ProfessorTreinoView frame = new ProfessorTreinoView(1);
-                    frame.setVisible(true); // Torna a janela visível
+                    // Teste simulando o aluno com ID 1
+                	Professor proTeste = new Professor();
+                	proTeste.setIdProf(1);
+                    proTeste.setNome("Usuário de Teste");
+                 // 2. Passamos esse objeto criado para a janela
+                    ProfessorTreinoView frame = new ProfessorTreinoView(proTeste);
+                    frame.setVisible(true);
+                    
                 } catch (Exception e) {
-                    e.printStackTrace(); // Imprime erros no console se houver falha ao abrir
-                }
+                    e.printStackTrace();            }
             }
         });
     }
@@ -60,15 +66,12 @@ public class ProfessorTreinoView extends JFrame {
      * Create the frame.
      * Construtor da classe: Configura a janela e seus componentes.
      */
-    public ProfessorTreinoView(int idProfessor) {
-        // Recebe o ID do professor no momento da criação da janela e guarda no atributo da classe
-        this.idProfessorLogado = idProfessor;
-        
+    public ProfessorTreinoView(Professor professorLogado) {        
         // Instancia o controlador para poder acessar os métodos de busca e listagem
         control = new TreinoControl();
         
         // Configurações iniciais da Janela (Título, ação de fechar, tamanho)
-        setTitle("Painel do Professor - ID Logado: " + idProfessor);
+        setTitle("Painel do Professor - Nome: " + professorLogado.getNome());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Encerra o programa ao fechar a janela
         setBounds(100, 100, 550, 450); // Define posição (x, y) e tamanho (largura, altura)
         
@@ -83,7 +86,7 @@ public class ProfessorTreinoView extends JFrame {
         // Adiciona um ouvinte de evento para o clique do botão
         btnListar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                listarAlunos(); // Chama o método interno que busca e exibe os alunos
+                listarAlunos(professorLogado); // Chama o método interno que busca e exibe os alunos
             }
         });
         btnListar.setBounds(51, 12, 428, 23); // Posicionamento manual
@@ -130,9 +133,9 @@ public class ProfessorTreinoView extends JFrame {
     
 
     // Método auxiliar para buscar alunos no banco/memória e exibir na tela
-    private void listarAlunos() {
+    private void listarAlunos(Professor professorLogado) {
         // Solicita ao control a lista de alunos vinculados a este professor
-        List<Aluno> lista = control.listarAlunosComTreino(this.idProfessorLogado);
+        List<Aluno> lista = control.listarAlunosComTreino(professorLogado);
         
         // Limpa a área de texto antes de escrever os novos dados
         textAreaLista.setText(""); 
@@ -156,41 +159,30 @@ public class ProfessorTreinoView extends JFrame {
             // Pega o texto digitado no campo de ID
             String idTexto = txtIdAluno.getText();
             
+            Aluno aluno = new Aluno();
+            textAreaDetalhe.setText("");
             // Verifica se o campo não está vazio
             if(!idTexto.isEmpty()) {
                 // Converte o texto (String) para número inteiro (int)
                 int idBuscado = Integer.parseInt(txtIdAluno.getText());
                 
+                //pASSA O ATRIBUTO ID PARA OBJETO ALUNO
+                aluno.setId(idBuscado);
+                
                 // Busca o treino na memória (lista cacheada) através do control
-                Treino treino = control.consultarTreinoNaMemoria(idBuscado);
+                String treino = control.consultarTreinoNaMemoria(aluno);
 
                 // Define um texto inicial se encontrar o treino (Nota: este trecho é visualmente sobrescrito logo abaixo)
                 if (treino != null) {
-                    textAreaDetalhe.setText(treino.getDescricao() + "...");
+                	textAreaDetalhe.setText(treino);
                 }                
                 
-                textAreaDetalhe.setText(""); // Limpa o campo de texto (sobrescrevendo o comando anterior)
-                
-                if (treino != null) {
-                    // Utiliza StringBuilder para montar o texto de forma eficiente
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("--- FICHA DE TREINO ATUAL ---\n");
-                    // Concatena as informações usando os Getters do objeto Treino
-                    sb.append("Descrição: ").append(treino.getDescricao()).append("\n");
-                    sb.append("Data Início: ").append(treino.getDataInicio()).append("\n");
-                    sb.append("Data Fim: ").append(treino.getDataFim()).append("\n");
-                    
-                    // Define o texto final na área de detalhes
-                    textAreaDetalhe.setText(sb.toString());
-                } else {
+            } else {
                     // Caso o objeto treino seja nulo (não encontrado)
                     textAreaDetalhe.setText("Nenhum treino ativo encontrado para este aluno.");
                 }
                 
-            } else {
-                // Exibe alerta se o campo de ID estiver vazio
-                JOptionPane.showMessageDialog(this, "Digite um ID na caixinha!");
-            }
+
         } catch (NumberFormatException ex) {
             // Tratamento de erro: executado se o usuário digitar letras em vez de números
             JOptionPane.showMessageDialog(this, "O ID deve ser numérico.");

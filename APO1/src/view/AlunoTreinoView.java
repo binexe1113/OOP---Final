@@ -11,31 +11,37 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane; // Import necessário para a barra de rolagem
 
 import control.TreinoControl;
+import model.Aluno;
 import model.Treino;
 
 public class AlunoTreinoView extends JFrame {
 
-    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     
     private JTextArea textArea; 
     private TreinoControl control;
+    
+    private Aluno alunoLogado;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
                     // Teste simulando o aluno com ID 1
-                    AlunoTreinoView frame = new AlunoTreinoView(1);
+                	Aluno alunoTeste = new Aluno();
+                	alunoTeste.setId(1);
+                    alunoTeste.setNome("Usuário de Teste");
+                 // 2. Passamos esse objeto criado para a janela
+                    AlunoTreinoView frame = new AlunoTreinoView(alunoTeste);
                     frame.setVisible(true);
+                    
                 } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    e.printStackTrace();            }
             }
         });
     }
 
-    public AlunoTreinoView(int idAluno) {
+    public AlunoTreinoView(Aluno alunoLogado) {
         // Inicializa o controlador para acessar os dados
         control = new TreinoControl();
         
@@ -47,43 +53,34 @@ public class AlunoTreinoView extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null); // Layout absoluto (posicionamento manual X,Y)
         
-        setTitle("Painel do Aluno - ID: " + idAluno);
+        setTitle("Painel do Aluno - Nome: " + alunoLogado.getNome());
         
         // Configuração do Botão de Consulta
         JButton btnConsultar = new JButton("Consultar próprio treino");
         btnConsultar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
+            	
+            	textArea.setText(""); // Limpa o campo de texto antes de mostrar novos dados
+
                 // 1. Chama a Control para buscar o treino pelo ID
-                Treino treinoEncontrado = control.consultarTreinoPorLoop(idAluno);
+                String treinoEncontrado = control.consultarTreino(alunoLogado);
                 
-                textArea.setText(""); // Limpa o campo de texto antes de mostrar novos dados
+                if(treinoEncontrado != null) {//checker para debug
+                	textArea.setText(treinoEncontrado);
+                } 
+                	
                 
-                if (treinoEncontrado != null) {
-                    textArea.append("--- FICHA DE TREINO ---\n\n");
+                
+                
                     
-                    // 2. Formata a lista de exercícios (ex: transforma String única em lista visual)
-                    String listaExercicios = control.gerarDescricaoFormatada(treinoEncontrado);
-                    
-                    textArea.append("ATIVIDADES:\n");
-                    textArea.append(listaExercicios + "\n\n"); 
-                    
-                    textArea.append("---------------------------\n");
-                    textArea.append("Vigência: " + treinoEncontrado.getDataInicio() + " até " + treinoEncontrado.getDataFim());
-                    
-                    // IMPORTANTE: Reseta a barra de rolagem para o topo após carregar o texto.
-                    // Sem isso, se o texto for longo, ele pode aparecer rolado lá para baixo.
                     textArea.setCaretPosition(0); 
                     
-                } else {
-                    textArea.setText("Nenhum treino encontrado para o seu ID.");
-                }
             }
         });
         btnConsultar.setBounds(120, 11, 200, 23);
         contentPane.add(btnConsultar);
         
-        // --- INÍCIO DA CORREÇÃO DO SCROLL (BARRA DE ROLAGEM) ---
+        // --- INÍCIO DA CORREÇÃO DO SCROLL //
         
         textArea = new JTextArea();
         
@@ -98,4 +95,5 @@ public class AlunoTreinoView extends JFrame {
         contentPane.add(scrollPane);
         
     }
+
 }

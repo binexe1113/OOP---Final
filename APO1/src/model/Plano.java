@@ -29,6 +29,9 @@ public class Plano {
     //=======GETTERS E SETTERS=========
 
 
+	public Plano() {
+	}
+
 	public int getIdPlano() {
 		return idPlano;
 	}
@@ -97,5 +100,12 @@ public class Plano {
 
 	public void setMatricula(Matricula matricula) {
 		this.matricula = matricula;
+	}
+	
+	//OVERRIDE PARA COMBOBOX
+	
+	@Override
+	public String toString() {
+	    return this.nome + " (R$ " + this.preco + ")";
 	}
 }

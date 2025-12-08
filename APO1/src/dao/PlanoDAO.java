@@ -1,6 +1,9 @@
 package dao;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import banco.DBConnection;
 import model.Plano;
 
@@ -11,37 +14,34 @@ public class PlanoDAO {
         this.conexao = DBConnection.getConnection();
     }
     
-    //Método busca o plano a partir do ID no BD
-    public Plano buscarPorId(int idPlano) {
-    	//Começa com NULL, para o case de não achar NADA!
-        Plano plano = null;
-        
-        // O '?' é um placeholder para o parâmetro que passaremos depois.
-        String sql = "{call sp_BuscarPlanoPorID(?)}";
+ // Dentro de PlanoDAO.java
+
+    public List<Plano> listarTodos() {
+        List<Plano> listaPlanos = new ArrayList<>();
+        String sql = "SELECT * FROM plano"; // 
+
         try {
-        	// Prepara a chamada da procedure usando a conexão atual
-            // CallableStatement é usado especificamente para Stored Procedures
-            CallableStatement stmt = this.conexao.prepareCall(sql);
-         // Substitui o primeiro '?' pelo valor da variável idPlano (int)
-            stmt.setInt(1, idPlano);
-            //Executa a consulta e armazena o resultado no ResultSet(tabela temp na memoria)
+            PreparedStatement stmt = this.conexao.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-            
-            if (rs.next()) { //Se entrou aqui, encontrou o plano
-                plano = new Plano( //Cria o objeto pegando os dados das colunas do banco
-                    rs.getInt("idPlano"), //Coluna idPlano
-                    rs.getString("nome"), // Coluna nome
-                    rs.getDouble("preco") // coluna preco
-                );
+
+            while (rs.next()) {
+                Plano plano = new Plano();
+                
+                plano.setIdPlano(rs.getInt("idPlano")); 
+                plano.setNome(rs.getString("nome"));   
+                plano.setPreco(rs.getDouble("preco")); 
+                
+                listaPlanos.add(plano);
             }
-            //Fecha os recursos para liberar memoria e conxões no bd
-            stmt.close(); 
+            
             rs.close();
-        } catch (SQLException e) {
-        	//Se der erro IMPRIME no console
+            stmt.close();
+
+        } catch (Exception e) {
+            System.err.println("Erro ao listar planos: " + e.getMessage());
             e.printStackTrace();
         }
-        //retorna o objeto montado (OU NULL)
-        return plano;
+
+        return listaPlanos;
     }
 }

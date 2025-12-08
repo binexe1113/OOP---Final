@@ -112,5 +112,12 @@ public class Aluno {
         this.treino = treino;
     }
 
+    
+    //OVERRIDE PARA O COMBOBOX
+    
+    @Override
+    public String toString() {
+       return this.cpf + " - " + this.nome;
+    }
 
 }

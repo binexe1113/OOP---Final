@@ -13,55 +13,14 @@ import dao.PlanoDAO;
 public class MatriculaControl {
 
     // Método principal chamado pela View
-    public Boolean adicionarMatricula(String cpfAluno, int idPlano, LocalDate dataInicio, int idPagamento) {
-        
-        // 1. MC->>AD: buscarPorCpf(cpfAluno)
-        AlunoDAO alunoDAO = new AlunoDAO();
-        Aluno objAluno = alunoDAO.buscarPorCpf(cpfAluno);
-        
-        if (objAluno == null) {
-            return false;
-        }
-        
-        //Checagem para ver se já existe matricula associada a esse aluno
-        MatriculaDAO matriculaDAO = new MatriculaDAO();
-        
-        //Verifica se o aluno já tem matrícula aqui
-        
-        if (matriculaDAO.verificaMatriculaAtiva(objAluno.getId())) {
-        	System.out.println("ERRO: Este aluno já possui matrícula ativa");
-        	return false;
-        }
-
-        // 2. MC->>PD: buscarPorId(idPlano)
-        PlanoDAO planoDAO = new PlanoDAO();
-        Plano objPlano = planoDAO.buscarPorId(idPlano);
-
-        if (objPlano == null) {
-            return false;
-        }
-
-        // 3. MC->>M: <<create>> (objAluno, objPlano, dataInicio)
-        Matricula novaMatricula = new Matricula(objAluno, objPlano, dataInicio);
-        
-        // MC->>PgD: buscarPorId(idPagamento)
-        PagamentoDAO pagamentoDAO = new PagamentoDAO();
-		Pagamento objPagamento = pagamentoDAO.buscarPorId(idPagamento);
-
-        if (objPagamento == null) {
-            System.out.println("ERRO: Pagamento não localizado.");
-            return false;
-        }
-
-        // 4. MC->>MD: salvar(novaMatricula)
-        MatriculaDAO matriculaDAO1 = new MatriculaDAO();
-        boolean sucesso = matriculaDAO1.salvar(novaMatricula);
-
-        // Feedback final para a View exibir
-        if (sucesso) {
-            return true;
-        } else {
-            return false;
-        }
+    public Boolean adicionarMatricula(Aluno aluno, Plano plano, LocalDate dataInicio, Pagamento pagamento) {
+    	
+    	Matricula matricula = new Matricula(aluno, plano, dataInicio,pagamento);
+    	
+    	MatriculaDAO dao = new MatriculaDAO();
+    	
+    	return dao.salvar(matricula);
+    	
+    
     }
 }

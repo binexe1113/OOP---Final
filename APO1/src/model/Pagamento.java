@@ -1,12 +1,14 @@
 package model;
 
 import java.time.LocalDate; // Usado para lidar com datas
+import java.time.LocalDateTime; // Usado para lidar com datas
+
 
 public class Pagamento {
 
     // Atributos do Diagrama
     private int idPagamento;
-    private LocalDate dataPagamento;
+    private LocalDateTime dataPagamento;
     private LocalDate dataVencimento;
     private double valor;
     private String metodoPagamento;
@@ -23,7 +25,7 @@ public class Pagamento {
     // Source > Generate Getters and Setters)
     
  // Construtor Cheio
-    public Pagamento(int idPagamento, LocalDate dataPagamento, LocalDate dataVencimento, double valor, String metodoPagamento, boolean status) {
+    public Pagamento(int idPagamento, LocalDateTime dataPagamento, LocalDate dataVencimento, double valor, String metodoPagamento, boolean status) {
         this.idPagamento = idPagamento;
         this.dataPagamento = dataPagamento;
         this.dataVencimento = dataVencimento;
@@ -36,8 +38,8 @@ public class Pagamento {
 	public int getIdPagamento() { return idPagamento; }
     public void setIdPagamento(int idPagamento) { this.idPagamento = idPagamento; }
 
-    public LocalDate getDataPagamento() { return dataPagamento; }
-    public void setDataPagamento(LocalDate dataPagamento) { this.dataPagamento = dataPagamento; }
+    public LocalDateTime getDataPagamento() { return dataPagamento; }
+    public void setDataPagamento(LocalDateTime dataPagamento) { this.dataPagamento = dataPagamento; }
 
     public LocalDate getDataVencimento() { return dataVencimento; }
     public void setDataVencimento(LocalDate dataVencimento) { this.dataVencimento = dataVencimento; }
@@ -50,5 +52,16 @@ public class Pagamento {
 
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
+
+
+
+//override para COMBOBOX
+
+    @Override
+	public String toString() {
+    	return this.dataPagamento + " (R$ " + this.valor + ")" + this.getMetodoPagamento();
+
+    }
+
 
 }

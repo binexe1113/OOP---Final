@@ -12,18 +12,17 @@ public class Matricula {
     private LocalDate dataFim;
     private Boolean status; // true = Ativa, false = Inativa/Cancelada
     
-    private List<Pagamento> pagamentos;
+    private Pagamento pagamento;
 
     // Construtor
-    public Matricula(Aluno aluno, Plano plano, LocalDate dataInicio) {
+    public Matricula(Aluno aluno, Plano plano, LocalDate dataInicio, Pagamento pagamento) {
         this.aluno = aluno;
         this.plano = plano;
         this.dataInicio = dataInicio;
         this.dataFim = dataInicio.plusYears(1);
+        this.pagamento = pagamento;
     
         
-        // Inicializa a lista vazia para evitar erro 
-        this.pagamentos = new ArrayList<>();
     }
 
     // --- GETTERS E SETTERS ---
@@ -87,11 +86,11 @@ public class Matricula {
     }
 
     // Pagamentos
-    public List<Pagamento> getPagamentos() {
-        return pagamentos;
+    public Pagamento getPagamentos() {
+        return pagamento;
     }
 
-    public void setPagamentos(List<Pagamento> pagamentos) {
-        this.pagamentos = pagamentos;
+    public void setPagamentos(Pagamento pagamento) {
+        this.pagamento = pagamento;
     }
 }

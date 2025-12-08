@@ -27,9 +27,9 @@ package banco;
 		public DBConnection() {
 		    this.setHost("localhost");
 		    this.setPort("3306"); 
-		    this.setSchema("GestaoAcademia"); // <--- NOME DO BANCO QUE CRIAMOS NO SQL
+		    this.setSchema("GestaoAcademia"); 
 		    this.setUser("root");
-		    this.setPassword("senha123"); // <--- Se seu MySQL tiver senha, coloque aqui!
+		    this.setPassword(""); 
 		    this.doConnection();
 		}
 		

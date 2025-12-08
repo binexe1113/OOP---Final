@@ -15,7 +15,18 @@ public class Professor {
 
     // --- GETTERS E SETTERS ---
 
-    public int getIdProf() {
+    public Professor(int int1, String string, String string2) {
+    	this.idProf = int1;
+    	this.nome = string;
+    	this.cpf = string2;
+		// TODO Auto-generated constructor stub
+	}
+
+	public Professor() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getIdProf() {
         return idProf;
     }
 
