@@ -1,0 +1,67 @@
+package model;
+
+import java.time.LocalDate; // Usado para lidar com datas
+import java.time.LocalDateTime; // Usado para lidar com datas
+
+
+public class Pagamento {
+
+    // Atributos do Diagrama
+    private int idPagamento;
+    private LocalDateTime dataPagamento;
+    private LocalDate dataVencimento;
+    private double valor;
+    private String metodoPagamento;
+    private boolean status; // true = pago, false = pendente
+
+
+    // Construtor Vazio
+    public Pagamento() {
+    }
+
+
+
+
+    // Source > Generate Getters and Setters)
+    
+ // Construtor Cheio
+    public Pagamento(int idPagamento, LocalDateTime dataPagamento, LocalDate dataVencimento, double valor, String metodoPagamento, boolean status) {
+        this.idPagamento = idPagamento;
+        this.dataPagamento = dataPagamento;
+        this.dataVencimento = dataVencimento;
+        this.valor = valor;
+        this.metodoPagamento = metodoPagamento;
+        this.status = status;
+    }
+
+
+	public int getIdPagamento() { return idPagamento; }
+    public void setIdPagamento(int idPagamento) { this.idPagamento = idPagamento; }
+
+    public LocalDateTime getDataPagamento() { return dataPagamento; }
+    public void setDataPagamento(LocalDateTime dataPagamento) { this.dataPagamento = dataPagamento; }
+
+    public LocalDate getDataVencimento() { return dataVencimento; }
+    public void setDataVencimento(LocalDate dataVencimento) { this.dataVencimento = dataVencimento; }
+
+    public double getValor() { return valor; }
+    public void setValor(double valor) { this.valor = valor; }
+
+    public String getMetodoPagamento() { return metodoPagamento; }
+    public void setMetodoPagamento(String metodoPagamento) { this.metodoPagamento = metodoPagamento; }
+
+    public boolean isStatus() { return status; }
+    public void setStatus(boolean status) { this.status = status; }
+
+
+
+//override para COMBOBOX
+
+    @Override
+	public String toString() {
+    	return this.dataPagamento + " (R$ " + this.valor + ")" + this.getMetodoPagamento();
+
+    }
+
+
+}

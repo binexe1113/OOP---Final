@@ -1,12 +1,12 @@
--- Criação do Banco de Dados
-DROP DATABASE GestaoAcademia;
+-- Criação do Banco de Dados--
+   -- DROP DATABASE GestaoAcademia;
 CREATE DATABASE IF NOT EXISTS GestaoAcademia;
 
 USE GestaoAcademia;
 
 
 -- 1. Tabela Academia (Base para as outras)
-CREATE TABLE Academia (
+CREATE TABLE IF NOT EXISTS Academia (
     idAcademia INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     endereco VARCHAR(255),
@@ -14,7 +14,7 @@ CREATE TABLE Academia (
 );
 
 -- 2. Tabela Plano
-CREATE TABLE Plano (
+CREATE TABLE IF NOT EXISTS Plano (
     idPlano INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     preco DECIMAL(10, 2) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE Plano (
 );
 
 -- 3. Tabela Funcionario (Superclasse)
-CREATE TABLE Funcionario (
+CREATE TABLE IF NOT EXISTS Funcionario (
     idFunc INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cpf VARCHAR(14) UNIQUE NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE Funcionario (
 );
 
 -- 4. Tabela Gerente (Herança de Funcionario)
-CREATE TABLE Gerente (
+CREATE TABLE IF NOT EXISTS Gerente (
     idFunc INT PRIMARY KEY,
     bonificacao DECIMAL(10, 2),
     nivelAcesso VARCHAR(50),
@@ -42,14 +42,14 @@ CREATE TABLE Gerente (
 );
 
 -- 5. Tabela Recepcionista (Herança de Funcionario)
-CREATE TABLE Recepcionista (
+CREATE TABLE IF NOT EXISTS Recepcionista (
     idFunc INT PRIMARY KEY,
     turno VARCHAR(50),
     FOREIGN KEY (idFunc) REFERENCES Funcionario(idFunc) ON DELETE CASCADE
 );
 
 -- 6. Tabela Professor (Entidade separada conforme diagrama)
-CREATE TABLE Professor (
+CREATE TABLE IF NOT EXISTS Professor (
     idProf INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cpf VARCHAR(14) UNIQUE NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE Professor (
 );
 
 -- 7. Tabela Aluno
-CREATE TABLE Aluno (
+CREATE TABLE IF NOT EXISTS Aluno (
     idAluno INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cpf VARCHAR(14) UNIQUE NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE Aluno (
 );
 
 -- 8. Tabela Matricula
-CREATE TABLE Matricula (
+CREATE TABLE IF NOT EXISTS Matricula (
     idMatricula INT AUTO_INCREMENT PRIMARY KEY,
     dataInicio DATE NOT NULL,
     dataFim DATE,
@@ -83,10 +83,10 @@ CREATE TABLE Matricula (
 );
 
 -- 9. Tabela Pagamento
-CREATE TABLE Pagamento (
+CREATE TABLE IF NOT EXISTS Pagamento (
     idPagamento INT AUTO_INCREMENT PRIMARY KEY,
-    dataPagamento DATE,
-    dataVencimento DATE NOT NULL,
+    dataPagamento DATETIME,
+    dataVencimento DATETIME NOT NULL,
     valor DECIMAL(10, 2) NOT NULL,
     metodoPagamento VARCHAR(50),
     status BOOLEAN,
@@ -95,7 +95,7 @@ CREATE TABLE Pagamento (
 );
 
 -- 10. Tabela AvaliacaoFisica
-CREATE TABLE AvaliacaoFisica (
+CREATE TABLE IF NOT EXISTS AvaliacaoFisica (
     idAvaliacao INT AUTO_INCREMENT PRIMARY KEY,
     data DATE NOT NULL,
     peso FLOAT,
@@ -109,7 +109,7 @@ CREATE TABLE AvaliacaoFisica (
 );
 
 -- 11. Tabela Aula
-CREATE TABLE Aula (
+CREATE TABLE IF NOT EXISTS Aula(
     idAula INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     horario TIME NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE Aula (
 );
 
 -- 12. Tabela Treino
-CREATE TABLE Treino (
+CREATE TABLE IF NOT EXISTS Treino(
     idTreino INT AUTO_INCREMENT PRIMARY KEY,
     descricao TEXT,
     dataInicio DATE,
@@ -131,7 +131,7 @@ CREATE TABLE Treino (
 );
 
 -- 13. Tabela Associativa: Aluno_Aula (Para o relacionamento N:M entre Aluno e Aula)
-CREATE TABLE Aluno_Aula (
+CREATE TABLE IF NOT EXISTS Aluno_Aula  (
     idAluno INT,
     idAula INT,
     PRIMARY KEY (idAluno, idAula),
@@ -139,10 +139,12 @@ CREATE TABLE Aluno_Aula (
     FOREIGN KEY (idAula) REFERENCES Aula(idAula)
 );
 
+-- PROCCEDURES ==============
 
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS sp_ListarAlunosETreinosPorProfessor $$
+
 
 CREATE PROCEDURE sp_ListarAlunosETreinosPorProfessor(IN p_idProf INT)
 BEGIN
@@ -202,8 +204,46 @@ BEGIN
     SELECT * FROM Plano WHERE idPlano = p_idPlano;
 END $$
 
+DELIMITER $$
+DELIMITER $$
+
+CREATE PROCEDURE sp_BuscarProfessorPorCPF(IN p_CPF VARCHAR(14))
+BEGIN
+    -- Seleciona os dados do professor onde o CPF coincide
+    SELECT 
+        IdProf,
+        Nome,
+        CPF
+        
+    FROM 
+        Professor
+    WHERE 
+        CPF = p_CPF;
+END $$
+
+CREATE PROCEDURE sp_BuscarProprioTreino(IN p_idAluno INT)
+BEGIN
+    SELECT 
+        idTreino, 
+        descricao, 
+        dataInicio, 
+        dataFim, 
+        idProf 
+    FROM 
+        Treino
+    WHERE 
+        idAluno = p_idAluno
+        -- Opcional: Garante que só traga treinos que ainda não venceram
+        AND (dataFim >= CURDATE() OR dataFim IS NULL)
+    ORDER BY 
+        dataInicio DESC -- Pega o mais recente caso haja mais de um
+    LIMIT 1; -- Retorna apenas um treino (o objeto objTreino do diagrama)
+END $$
+
+DELIMITER ;
+
 -- 3. Salvar Matrícula (Recebendo IDs, pois o banco é relacional)
-DROP PROCEDURE IF EXISTS sp_AdicionarMatricula $$
+DELIMITER $$
 CREATE PROCEDURE sp_AdicionarMatricula(
     IN p_idAluno INT, 
     IN p_idPlano INT, 
@@ -217,7 +257,6 @@ END $$
 
 DELIMITER ;
 
-USE gestaoacademia;
 
 DELIMITER $$
 
@@ -231,7 +270,6 @@ END $$
 
 DELIMITER ;
 
-USE GestaoAcademia;
 
 -- ==================================================
 -- 1. DADOS BASE (Academia e Planos)
@@ -286,8 +324,9 @@ INSERT INTO Matricula (dataInicio, dataFim, status, idAluno, idPlano) VALUES
 
 -- Pagamentos
 INSERT INTO Pagamento (dataPagamento, dataVencimento, valor, metodoPagamento, status, idAluno) VALUES 
-('2023-10-05', '2023-10-10', 129.90, 'Pix', 1, 1), -- Pagamento do Naruto
-(NULL, '2023-10-10', 199.90, NULL, 0, 2);          -- Pagamento pendente do Sasuke
+('2025-10-05 14:50', '2026-10-10 14:50', 129.90, 'Pix', 1, 1), -- Pagamento do Naruto
+('2025-10-05 14:50', '2026-10-10 14:50', 199.90, 'Boleto', 0, 2),       -- Pagamento pendente do Sasuke
+('2025-12-07 14:50', '2026-10-10 14:50', 199.90, 'Cartao de crédito', 1, 4);
 
 -- ==================================================
 -- 4. TREINOS E AVALIAÇÕES (Onde suas procedures brilham)
@@ -329,7 +368,7 @@ INSERT INTO Aluno_Aula (idAluno, idAula) VALUES
 
 
 SELECT * FROM Matricula 
-ORDER BY idMatricula DESC; -- Mostra as últimas inseridas primeiro
+ORDER BY idMatricula DESC -- Mostra as últimas inseridas primeiro
 
 
 
